@@ -1,4 +1,5 @@
-### 1. let and const
+# 1. Node.js 6 and ES2015
+## 1. let and const
 
 ```nodejs
 if (false) {
@@ -37,7 +38,7 @@ const path = require('path'); // const use at using module.
 let path = './some/path'; // Error
 ```
 
-### 2. Arrow Function
+## 2. Arrow Function
 
 ```nodejs
 // Old Function
@@ -104,3 +105,101 @@ DelayedGreeter.prototype.greet = function() {
 const greeter = new DelaydGreeter('World');
 greeter.greet(); // Hello World
 ```
+
+## 3. Class
+
+```nodejs
+function Person(name, surname, age) {
+  this.name = name;
+  this.surname = surname;
+  this.age = age;
+}
+
+Person.prototype.getFullName = function() {
+  return this.name + ' ' + this.surname;
+}
+
+Person.older = function(person1, person2) {
+  return (person1.age > person2.age) ? person1 : person2;
+}
+```
+
+```nodejs
+// Constructor Function
+class Person {
+  constructor(name, surname, age) {
+    this.name = name;
+    this.surname = surname;
+    this.age = age;
+  }
+
+  getFullName() {
+    return this.name + ' ' + this.surname;
+  }
+
+  static older(person1, person2) {
+    return person1 > person2 ? person1 : person2;
+  }
+}
+```
+
+```nodejs
+// Class
+class PersonWithMiddlename extends Person {
+  constructor(name, middlename, surname, age) {
+    super(name, surname, age);
+    this.middlename = middlename;
+  }
+
+  getFullName() {
+    return this.name + ' ' + this.middlename + ' ' + this.surname;
+  }
+}
+```
+
+## 4. Object literal
+
+```nodejs
+const x = 22;
+const y = 17;
+const obj = { x, y } // Object literal
+
+module.exports = { // Object literal
+  square(x) {
+    return x * x;
+  },
+  cube(x) {
+    return x * x * x;
+  }
+}
+```
+
+```nodejs
+const namespace = '-webkit-';
+const style = {
+  [namespace + 'box-sizing']: 'border-box', // dynamic attribute name
+  [namespace + 'box-shadow']: '10px10px5px #888888'
+}
+```
+
+```nodejs
+const person = {
+  name: 'eorge',
+  surname: 'Boole',
+
+  get fullname() {
+    return this.name + ' ' + this.surname;
+  }
+
+  set fullname(fullanme) {
+    let parts = fullname.slit(' ');
+    this.name = parts[0];
+    this.surname = parts[1];
+  }
+}
+
+console.log(person.fullname); // Geroge Boole
+console.log(person.fullname = 'Alan Turing') // Alan Turing
+console.log(person.name) // Alan
+```
+
