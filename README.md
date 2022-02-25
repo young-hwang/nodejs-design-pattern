@@ -249,5 +249,31 @@ for (const entry of s) {
 ## 6. WeakMap and WeakSet
 
 ```nodejs
+let obj = {}; // key is object type
+const map = new WeakMap();
+map.set(obj, {key: "some_value"});
+console.log(map.get(obj)); // {key: "some_value"}
+obj = undefined; // running garbage collector
+```
 
+```nodejs
+let obj1 = {key: "val1"};
+let obj2 = {key: "val2"};
+const set = new WeakSet([obj1, obj2]);
+console.log(set.has(obj1)); // true
+obj1 = undefined;
+console.log(set.has(obj1)); // false
+```
+
+## 7. Template 
+
+```nodejs
+const name = "Leonardo";
+const interest = ["arts", "architecture", "science", "music", "mathematics"];
+const birth = { year: 1452, place: 'Flornce' };
+cost text = `${name} was an Italian ploymath 
+    interested in many topics such as
+    ${interest.join(', ')}. He was born
+    in ${birth.year} in ${birth.place}`
+console.log(text);
 ```
