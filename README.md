@@ -1,5 +1,8 @@
-# 1. Node.js 6 and ES2015
-## 1. let and const
+# 1. Node.js 
+
+## 2. Node.js 6 and ES2015
+
+### 1. let and const
 
 ```nodejs
 if (false) {
@@ -38,7 +41,7 @@ const path = require('path'); // const use at using module.
 let path = './some/path'; // Error
 ```
 
-## 2. Arrow Function
+### 2. Arrow Function
 
 ```nodejs
 // Old Function
@@ -106,7 +109,7 @@ const greeter = new DelaydGreeter('World');
 greeter.greet(); // Hello World
 ```
 
-## 3. Class
+### 3. Class
 
 ```nodejs
 function Person(name, surname, age) {
@@ -157,7 +160,7 @@ class PersonWithMiddlename extends Person {
 }
 ```
 
-## 4. Object literal
+### 4. Object literal
 
 ```nodejs
 const x = 22;
@@ -203,7 +206,7 @@ console.log(person.fullname = 'Alan Turing') // Alan Turing
 console.log(person.name) // Alan
 ```
 
-## 5. Map and Set Collection
+### 5. Map and Set Collection
 
 ```nodejs
 const profiles = new Map();
@@ -246,7 +249,7 @@ for (const entry of s) {
 }
 ```
 
-## 6. WeakMap and WeakSet
+### 6. WeakMap and WeakSet
 
 ```nodejs
 let obj = {}; // key is object type
@@ -265,7 +268,7 @@ obj1 = undefined;
 console.log(set.has(obj1)); // false
 ```
 
-## 7. Template 
+### 7. Template 
 
 ```nodejs
 const name = "Leonardo";
@@ -277,3 +280,134 @@ cost text = `${name} was an Italian ploymath
     in ${birth.year} in ${birth.place}`
 console.log(text);
 ```
+
+## 3. Reactor Patterns
+
+### 3. Non Blocking IO
+
+```nodejs
+resources = [socketA, socketB, socketC];
+// busy waiting : high cost cpu
+while (!resources.empty()) {
+    for (i = 0; i < resources.length; i++) {
+        resource = resources[i];
+        let data = resource.read();
+        if (data === NO_DATA_AVAILABLE)
+            continue;
+        if(data === RESOURCE_CLOSED)
+            resources.remove(i);
+        else
+            consumeData(data);
+    }
+}
+```
+
+### 4. Event Demultiplexing
+
+운영체제이서 제공하는 Non Blocking Resource 처리를 위한 기능
+***동기 이벤트 디멀티플렉서 or 이벤트 통지 인터페이스***
+
+```nodejs
+socketA, pipeB;
+watchedList.add(socketA, FOR_READ);
+watchedList.add(pipeB, FOR_READ);
+while (events = demuliplexer.watch(watchedList)) {
+    // event loop
+    foreach (event in events) {
+        // read non-blocking, always return data
+        data = event.resource.read();
+        if (data === RESOURCE_CLOSED) 
+            demultiplexer.unwatch(event.resource);
+        else
+            consumeData(data);   
+    } 
+}
+```
+
+# 2. Node.js Patterns
+
+## 1. Callback Patterns
+
+### 1. The Continuation-Passing Style
+
+```nodejs
+// direct style
+function add(a, b) {
+    return a + b;
+}
+```
+
+```nodejs
+// continuation-passing style
+function add(a, b, callback) {
+    callback(a + b);
+}
+console.log('before'); 
+add(1, 2, result => console.log('Result: ' + result)); 
+console.log('after'); 
+
+before
+Result: 3
+after
+```
+
+```nodejs
+// ayncronous continuation-passing style
+function add(a, b, callback) {
+    setTimeout(() => callback(a + b), 100); // setTimeout is asynchronous
+}
+
+console.log('before'); // before
+add(1, 2, result => console.log('Result: ' + result)); // Result:
+console.log('after'); // after
+
+before
+after
+Result: 3
+```
+
+```nodejs
+// Non-continuation-passing style
+const result = [1, 5, 7].map(element => element - 1);
+console.log('result');
+```
+
+### 2. sync? async?
+
+```nodejs
+const fs = require('fs');
+const cache = {};
+function inconsistentRead(filename, callback) {
+    if (cache[filename]) {
+        // synchronous
+        callback(cache[filename]);
+    else {
+        // asynchronous
+        fs.readFile(filename, 'utf8', (err, data) => {
+            cache[filename] = data;
+            callback(data);
+        }
+    }
+}
+function createFileReader(filename) {
+    const listeners = [];
+    inconsistentRead(filename, value => {
+        listeners.foreach(listener => listener(value));
+    });
+    return {
+        onDataReady: listener => listeners.push(listener);
+    };
+}
+const rader1 = createFileReader('data.txt');
+reader1.onDataReady(data => {
+    console.log('First call data: ' + data);
+    
+    const reader2 = createFileReader('data.txt');
+    reader2.onDataReady(data => {
+        console.log('Second call data: ' + data);
+    });
+});
+
+First call data: some data
+```
+
