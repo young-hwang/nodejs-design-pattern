@@ -411,3 +411,145 @@ reader1.onDataReady(data => {
 First call data: some data
 ```
 
+```nodejs
+// deffered execution
+const fs = require('fs');
+const cache = {};
+function consistentReadAsync(filename, callback) {
+    if (cache[filename]) {
+        process.nextTick(() => callback(cache[filename])); // deffered execution
+    } else {
+        // asynchronous function
+        fs.readFile(filename, 'utf8', (err, data) => {
+            cache[filename] = data;
+            callback(data);
+        });
+    }
+}
+```
+
+### 3. node.js callback principle
+
+```nodejs
+// callback is last parameter
+fs.readFile(filename, 'utf8', (err, data) => { // err parameter is first in callback
+    if (err) {
+        handleError(err);
+    else 
+        processData(data);
+})
+```
+
+```nodejs
+// Error spread
+const fs = require('fs');
+function readJSON(filename, callback) {
+    fs.readFile(filename, 'utf8', (err, data) => {
+        let parsed;
+        if (err) 
+            return callback(err);
+        
+        try {
+            // parsing data
+            parsed = JSON.parse(data)
+        } catch (err) {
+            return callback(err);
+        }
+        
+        callback(null, parsed);
+    }
+}
+```
+
+```nodejs
+// not chatched exceptions
+const fs = require('fs');
+function readJSONThrows (filename, callback) {
+    fs.readFile(filename, 'utf8', (err, data) => {
+        let parsed;
+        if (err) 
+            return callback(err);
+        
+        callback(null, JSON.parse(data));
+    }
+}
+readJSONThrows('nonJSON.txt', err => console.log(err));
+// SyntaxError : Unexpected token d
+```
+
+```nodejs
+const fs = require('fs');
+try {
+    function readJSONThrows (filename, callback) {
+        fs.readFile(filename, 'utf8', (err, data) => {
+            let parsed;
+            if (err) 
+                return callback(err);
+            
+            callback(null, JSON.parse(data));
+        }
+    }
+} catch (err) {
+    console.log('This will not catch the JSON parsing exception');
+}
+```
+
+```nodejs
+process.on('uncaughtException', (err) => {
+    console.error('This whill catch at last the + 'JSON parsing exception: ' + err.message);
+    // end code '1', application exit
+    process.exit(1); 
+});
+```
+
+## 2 Module System and Patterns
+
+### 1. Revealing Module Pattern
+
+```nodejs
+const module = (() => {
+    const privateFoo = () => {};
+    const privateBar = [];
+    
+    const exported = {
+        publicFoo: () => {},
+        publicBar: () => {}
+    }
+})();
+console.log(module);
+```
+
+### 2. Node.js Module
+
+```nodejs
+function loadModule(filename, module, require) {
+    const wrappedSrc = `(function(module, exports, require) {
+        ${fs.readFileSync(filename, 'utf8')}  
+    })(module, module.exports, require);`;
+    eval(wrappedSrc);
+}
+
+const require = (moduleName) => {
+    console.log(`Require invoked for module: ${moduleName}`);
+    const id = require.resovle(moduleName);
+    if(require.cache[id]) {
+        return require.cache[id].exports;
+    }
+    
+    // module metadata a
+    const module = {
+        exports: {},
+        id: id
+    }
+    
+    // the cache
+    require.cache[id] = module;
+    
+    // load module
+    loadModule(id, module, require);
+    
+    return module.exports;
+}
+require.cache = {};
+require.resolve = (moduleName) => {};
+```
