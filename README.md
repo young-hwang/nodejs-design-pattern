@@ -553,3 +553,58 @@ const require = (moduleName) => {
 require.cache = {};
 require.resolve = (moduleName) => {};
 ```
+
+```nodejs
+const dependency = require('./anotherModule');
+
+function log() {
+    console.log(`Well done ${dependency.username}`);
+}
+
+module.exports.run = () => {
+    log();
+}    
+```
+```nodejs
+// require is synchronous
+setTimeout(() => {
+    module.exports = function() {}, 100);
+}
+```
+
+```nodejs
+// circulation dependency
+
+// a.js
+exports.loaded = false;
+const b = require('./b');
+module.exports = {
+    bWasLoaded: b.loaded,
+    loaded: true
+}
+
+// b.js
+exports.loaded = false;
+const a = require('./a');
+module.exports = {
+    aWasLoaded: a.loaded,
+    loaded: true
+}
+
+// main.js
+const a = require('./a');
+const b = require('./b');
+console.log(a);
+console.log(b);
+
+{ bWasLoaded: true, loaded: true }
+{ bWasLoaded: false, loaded: true }
+```
+
+### 3. Module Definition Pattern
+
+```nodejs
+
+```
+
+
