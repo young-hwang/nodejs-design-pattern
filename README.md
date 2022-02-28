@@ -604,7 +604,14 @@ console.log(b);
 ### 3. Module Definition Pattern
 
 ```nodejs
+// named exports
+exports.info = (message) => {
+    console.log('info ' + message);
+};
 
+exports.verbose = (message) => {
+    console.log('verbose ' + message);
+}
 ```
 
 
