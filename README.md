@@ -605,13 +605,153 @@ console.log(b);
 
 ```nodejs
 // named exports
+
+// logger.js
 exports.info = (message) => {
-    console.log('info ' + message);
+    console.log('info: ' + message);
 };
 
 exports.verbose = (message) => {
-    console.log('verbose ' + message);
+    console.log('verbose: ' + message);
+}
+
+// main.js
+const logger = require('./logger');
+logger.info('This is an informational message')
+logger.log('This is a verbose message')
+```
+
+```nodejs
+// Exporting a function(= substack)
+
+// logger.js
+module.exports = (message) => {
+    console.log(`info: ${message}`);
+}
+
+module.exports.verbose = (message) => {
+    console.log(`verbose: ${message}`);
+}
+
+// main.js
+const logger = require('./logger');
+logger('This is an informational message');
+logger.verbose('This is a verbose message');
+```
+
+```nodejs
+// constructor export
+
+// logger.js
+function Logger(name) {
+    this.name = name;
+}
+
+Logger.prototype.log = function(message) {
+    console.log(`[${this.name}] ${message}`);
+}
+
+Logger.prototype.info = function(message) { 
+    console.log(`info: ${message}`);
+}
+
+Logger.prototype.verbose= function(message) { 
+    console.log(`verbose: ${message}`);
+}
+
+module.exports = Logger;
+
+// main.js
+const Logger = require('./logger');
+const dbLogger = new Logger('DB');
+dbLogger.info('This is an informational message');
+const accessLogger = new Logger('ACCESS');
+accessLogger.verbose('This is a verbose message');
+```
+
+```nodejs
+// class export
+
+class Logger {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    log(message) {
+        console.log(`[${this.name}] ${message});
+    }
+    
+    info(message) {
+        console.log(`info: ${message}`);
+    }
+    
+    verbose(message) {
+        console.log(`verbose: ${message}`);
+    }
+}
+
+exports.module = Logger;
+```
+
+```nodejs
+// guard (constructor function or class)(like factory)
+
+function Logger(name) {
+    if(!(this instanceof Logger)) {
+        return new Logger(name);
+    }
+    this.name = name;
+}
+
+// logger.js
+const Logger = require('./logger.js');
+const dbLogger = Logger('DB');
+dbLogger.verbose('This is a verbose message');
+```
+
+```nodejs
+// new.target attribute use
+function Logger(name) {
+    if(!new.target) {
+        return new LoggerConstructor(name);
+    }
+    this.name = name;
 }
 ```
 
+```nodejs
+// export instance 
 
+// logger.js
+function Logger(name) {
+    this.count = 0;
+    this.name = name;
+}
+
+Logger.prototype.log = function(message) {
+    this.count++;
+    console.log('[' + this.name + '] ' + message);
+};
+
+module.exports = new Logger('DEFAULT');
+module.exports.Logger = Logger;
+
+// main.js
+const logger = require('./logger');
+logger.log('This is an informational message');
+
+const customLogger = new logger.Logger('CUSTOM');
+customLogger.log('This is an informational message');
+```
+
+```nodejs
+// modify module and global scope(monkey patching)
+
+// patcher.js
+require('./logger').customMessage = () => console.log('This is a new functionality');
+
+// main.js
+require('./patcher');
+const logger = require('./logger');
+logger.customMessage();
+```
