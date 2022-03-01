@@ -745,7 +745,7 @@ customLogger.log('This is an informational message');
 ```
 
 ```nodejs
-// modify module and global scope(monkey patching)
+// modify module and global scope(monkey patching)(dangerous)
 
 // patcher.js
 require('./logger').customMessage = () => console.log('This is a new functionality');
@@ -754,4 +754,71 @@ require('./logger').customMessage = () => console.log('This is a new functionali
 require('./patcher');
 const logger = require('./logger');
 logger.customMessage();
+```
+
+## The Observer Pattern
+
+### 1 EventEmitter Class
+
+```nodejs
+const EventEmitter = require('event').EventEmitter;
+const eeInstance = new EventEmitter();
+```
+
+### 2. Use EventEmitter 
+
+```nodejs
+const EventEmitter = require('event').EventEmitter;
+const fs = require('fs');
+
+function findPattern(files, regex) {
+    const emitter = new EventEmitter();
+    files.forEach(function(file) {
+        fs.readFile(file, 'utf8', (err, content) => {
+            if (err)
+                return emitter.emit('error', err); // must need. error emitter
+            emitter.emit('fileread', file);
+            let match;
+            if (match = content.match(regex))
+                match.forEach(elem => emitter.emit('found', file, elem));
+        });
+    });
+    return emitter;
+}
+
+filePattern(
+    ['fileA.txt', 'fileB.json'],
+    /hello \w+/g
+)
+.on('fileread', file => console.log(file + ' was read'))
+.on('found', (file, match) => console.log('Matched "' + match + '" in file ' + file)
+.on('error', err => console.log('Error emitted: ' + err.message));
+```
+
+### 4. Create Observer Class
+
+```nodejs
+const EventEmitter = require('events').EventEmitter;
+const fs = require('fs');
+
+class FindPattern extends EventEmitter {
+    constructor(regex) {
+        super();
+        this.regex = regex;
+        this.files = [];
+    }
+    
+    addFile(file) {
+        this.files.push(file);
+        return this;
+    }
+    
+    find() {
+        this.files.forEach(file => {
+            fs.readFile(file, 'utf8', (err, data) => {
+                
+            });
+        });
+    }
+}
 ```
