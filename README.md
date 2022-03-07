@@ -795,6 +795,8 @@ filePattern(
 .on('error', err => console.log('Error emitted: ' + err.message));
 ```
 
+### 3. error propagation
+
 ### 4. Create Observer Class
 
 ```nodejs
@@ -832,6 +834,25 @@ findPatternObj
 .addFile('fileA.txt')
 .addFile('fileB.json')
 .find()
+.on('filerad', file => console.log(`${file} was read`)
 .on('found', (file, match) => console.log(`Matched "${match}" in file ${file}))
 .on('error', err => console.log(`Error emitted ${err.message}));
 ```
+
+### 5. sync / async event
+
+```nodejs
+const EventEmitter = require('event').EventEmitter;
+
+class SyncEmit extends EventEmitter {
+    constructor() {
+        super();
+        this.emit('ready');
+    }
+}
+
+const syncEmit = new SyncEmit();
+syncemit().on('ready', () => console.log('Object is ready to be used'));
+```
+
+
