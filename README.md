@@ -855,4 +855,77 @@ const syncEmit = new SyncEmit();
 syncemit().on('ready', () => console.log('Object is ready to be used'));
 ```
 
+### 6. EventEmitter vs Callback
+
+```nodejs
+// EventEmitter
+function helloEvents() {
+    const eventEmitter = new EventEmitter();
+    setTimeout(() => event.emit('hello', 'hello world'), 100)
+    return EventEmitter;
+}
+
+// Callback
+function helloCallback(callback) {
+    setTimeout(() => callback('hello world'), 100);
+}
+```
+
+# 3. Asynchronous control pattern using callback
+
+## 1. Difficult of asynchronous programming
+
+### 1. Make a simple web project
+
+```nodejs
+// spider.js
+const request = require('request');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const utilities = require('./utilities');
+
+function spider(url, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.exists(filename, exists => {
+        if(!exists) {
+            console.log(`Downloading ${url}`);
+            requst(url, (err, response, body) => {
+                if(err) {
+                    callback(err);
+                } else {
+                    mkdirp(path.dirname(filename)), err => {
+                        if(err) {
+                            callback(err);
+                        } else {
+                            fs.writeFile(filename, body, err => {
+                                if(err) {
+                                    callback(err);
+                                } else {
+                                    callback(null, filename, true);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        } else {
+            callback(null, filename, false);
+        }
+    });
+}
+
+spider(process.argv[2], (err, filename, downloaded) => {
+    if(err) {
+        console(err);
+    } else if(downloaded) {
+        console.log(`Completed the download of "${filename}"`);
+    } else {
+        console.log(`"${filename}" was already downloaded`);
+    }
+});
+
+// execute
+node spider http://www.example.com
+```
 
