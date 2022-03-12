@@ -929,3 +929,108 @@ spider(process.argv[2], (err, filename, downloaded) => {
 node spider http://www.example.com
 ```
 
+## 2. Use Normal Javascript
+
+### 2. Use Callback Rule
+
+```nodejs
+// 1st refactoring
+function spider(url, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.exists(filename, exists => {
+        if(!exists) {
+            console.log(`Downloading ${url}`);
+            requst(url, (err, response, body) => {
+                if(err) {
+                    return callback(err);
+                } 
+                
+                mkdirp(path.dirname(filename)), err => {
+                    if(err) {
+                        return callback(err);
+                    } 
+                    
+                    fs.writeFile(filename, body, err => {
+                        if(err) {
+                            return callback(err);
+                        } 
+                        callback(null, filename, true);
+                    });
+                }
+            });
+        } else {
+            callback(null, filename, false);
+        }
+    });
+}
+```
+
+```nodejs
+// 2nd refactoring
+function spider(url, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.exists(filename, exists => {
+        if(!exists) {
+            console.log(`Downloading ${url}`);
+            requst(url, (err, response, body) => {
+                if(err) {
+                    return callback(err);
+                } 
+                saveFile(filename, body, callback);
+            });
+        } else {
+            callback(null, filename, false);
+        }
+    });
+}
+
+function saveFile(filename, content, callback) {
+    mkdirp(path.dirname(filename)), err => {
+        if(err) {
+            return callback(err);
+        } 
+        
+        fs.writeFile(filename, body, callback);
+    }
+}
+```
+
+```nodejs
+// 3rd refactoring
+function spider(url, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.exists(filename, exists => {
+        if(!exists) {
+            return download(url, filename, callback);
+        } else {
+            return callback(null, filename, false);
+        }
+    });
+}
+
+function saveFile(filename, content, callback) {
+    mkdirp(path.dirname(filename)), err => {
+        if(err) {
+            return callback(err);
+        } 
+        
+        fs.writeFile(filename, body, callback);
+    }
+}
+
+function download(url, filename, callback) {
+    console.log(`Downloading ${url}`);
+    requst(url, (err, response, body) => {
+        if(err) {
+            return callback(err);
+        } 
+        saveFile(filename, body, err => {
+            if(err) {
+                return callback(err);
+            }
+            console.log(`Downloaded and saved: ${url}`);
+            callback(null, body)
+        });
+    });
+}
+```
