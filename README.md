@@ -1,4 +1,4 @@
-# 1. Node.js 
+# 1. Node.js
 
 ## 2. Node.js 6 and ES2015
 
@@ -268,13 +268,13 @@ obj1 = undefined;
 console.log(set.has(obj1)); // false
 ```
 
-### 7. Template 
+### 7. Template
 
 ```nodejs
 const name = "Leonardo";
 const interest = ["arts", "architecture", "science", "music", "mathematics"];
 const birth = { year: 1452, place: 'Flornce' };
-cost text = `${name} was an Italian ploymath 
+cost text = `${name} was an Italian ploymath
     interested in many topics such as
     ${interest.join(', ')}. He was born
     in ${birth.year} in ${birth.place}`
@@ -316,11 +316,11 @@ while (events = demuliplexer.watch(watchedList)) {
     foreach (event in events) {
         // read non-blocking, always return data
         data = event.resource.read();
-        if (data === RESOURCE_CLOSED) 
+        if (data === RESOURCE_CLOSED)
             demultiplexer.unwatch(event.resource);
         else
-            consumeData(data);   
-    } 
+            consumeData(data);
+    }
 }
 ```
 
@@ -342,9 +342,9 @@ function add(a, b) {
 function add(a, b, callback) {
     callback(a + b);
 }
-console.log('before'); 
-add(1, 2, result => console.log('Result: ' + result)); 
-console.log('after'); 
+console.log('before');
+add(1, 2, result => console.log('Result: ' + result));
+console.log('after');
 
 before
 Result: 3
@@ -401,7 +401,7 @@ function createFileReader(filename) {
 const rader1 = createFileReader('data.txt');
 reader1.onDataReady(data => {
     console.log('First call data: ' + data);
-    
+
     const reader2 = createFileReader('data.txt');
     reader2.onDataReady(data => {
         console.log('Second call data: ' + data);
@@ -435,7 +435,7 @@ function consistentReadAsync(filename, callback) {
 fs.readFile(filename, 'utf8', (err, data) => { // err parameter is first in callback
     if (err) {
         handleError(err);
-    else 
+    else
         processData(data);
 })
 ```
@@ -446,16 +446,16 @@ const fs = require('fs');
 function readJSON(filename, callback) {
     fs.readFile(filename, 'utf8', (err, data) => {
         let parsed;
-        if (err) 
+        if (err)
             return callback(err);
-        
+
         try {
             // parsing data
             parsed = JSON.parse(data)
         } catch (err) {
             return callback(err);
         }
-        
+
         callback(null, parsed);
     }
 }
@@ -467,9 +467,9 @@ const fs = require('fs');
 function readJSONThrows (filename, callback) {
     fs.readFile(filename, 'utf8', (err, data) => {
         let parsed;
-        if (err) 
+        if (err)
             return callback(err);
-        
+
         callback(null, JSON.parse(data));
     }
 }
@@ -483,9 +483,9 @@ try {
     function readJSONThrows (filename, callback) {
         fs.readFile(filename, 'utf8', (err, data) => {
             let parsed;
-            if (err) 
+            if (err)
                 return callback(err);
-            
+
             callback(null, JSON.parse(data));
         }
     }
@@ -498,7 +498,7 @@ try {
 process.on('uncaughtException', (err) => {
     console.error('This whill catch at last the + 'JSON parsing exception: ' + err.message);
     // end code '1', application exit
-    process.exit(1); 
+    process.exit(1);
 });
 ```
 
@@ -510,7 +510,7 @@ process.on('uncaughtException', (err) => {
 const module = (() => {
     const privateFoo = () => {};
     const privateBar = [];
-    
+
     const exported = {
         publicFoo: () => {},
         publicBar: () => {}
@@ -524,7 +524,7 @@ console.log(module);
 ```nodejs
 function loadModule(filename, module, require) {
     const wrappedSrc = `(function(module, exports, require) {
-        ${fs.readFileSync(filename, 'utf8')}  
+        ${fs.readFileSync(filename, 'utf8')}
     })(module, module.exports, require);`;
     eval(wrappedSrc);
 }
@@ -535,19 +535,19 @@ const require = (moduleName) => {
     if(require.cache[id]) {
         return require.cache[id].exports;
     }
-    
+
     // module metadata a
     const module = {
         exports: {},
         id: id
     }
-    
+
     // the cache
     require.cache[id] = module;
-    
+
     // load module
     loadModule(id, module, require);
-    
+
     return module.exports;
 }
 require.cache = {};
@@ -563,7 +563,7 @@ function log() {
 
 module.exports.run = () => {
     log();
-}    
+}
 ```
 ```nodejs
 // require is synchronous
@@ -651,11 +651,11 @@ Logger.prototype.log = function(message) {
     console.log(`[${this.name}] ${message}`);
 }
 
-Logger.prototype.info = function(message) { 
+Logger.prototype.info = function(message) {
     console.log(`info: ${message}`);
 }
 
-Logger.prototype.verbose= function(message) { 
+Logger.prototype.verbose= function(message) {
     console.log(`verbose: ${message}`);
 }
 
@@ -676,15 +676,15 @@ class Logger {
     constructor(name) {
         this.name = name;
     }
-    
+
     log(message) {
         console.log(`[${this.name}] ${message});
     }
-    
+
     info(message) {
         console.log(`info: ${message}`);
     }
-    
+
     verbose(message) {
         console.log(`verbose: ${message}`);
     }
@@ -720,7 +720,7 @@ function Logger(name) {
 ```
 
 ```nodejs
-// export instance 
+// export instance
 
 // logger.js
 function Logger(name) {
@@ -765,7 +765,7 @@ const EventEmitter = require('event').EventEmitter;
 const eeInstance = new EventEmitter();
 ```
 
-### 2. Use EventEmitter 
+### 2. Use EventEmitter
 
 ```nodejs
 const EventEmitter = require('event').EventEmitter;
@@ -809,12 +809,12 @@ class FindPattern extends EventEmitter {
         this.regex = regex;
         this.files = [];
     }
-    
+
     addFile(file) {
         this.files.push(file);
         return this;
     }
-    
+
     find() {
         this.files.forEach(file => {
             fs.readFile(file, 'utf8', (err, content) => {
@@ -943,17 +943,17 @@ function spider(url, callback) {
             requst(url, (err, response, body) => {
                 if(err) {
                     return callback(err);
-                } 
-                
+                }
+
                 mkdirp(path.dirname(filename)), err => {
                     if(err) {
                         return callback(err);
-                    } 
-                    
+                    }
+
                     fs.writeFile(filename, body, err => {
                         if(err) {
                             return callback(err);
-                        } 
+                        }
                         callback(null, filename, true);
                     });
                 }
@@ -975,7 +975,7 @@ function spider(url, callback) {
             requst(url, (err, response, body) => {
                 if(err) {
                     return callback(err);
-                } 
+                }
                 saveFile(filename, body, callback);
             });
         } else {
@@ -988,8 +988,8 @@ function saveFile(filename, content, callback) {
     mkdirp(path.dirname(filename)), err => {
         if(err) {
             return callback(err);
-        } 
-        
+        }
+
         fs.writeFile(filename, body, callback);
     }
 }
@@ -1012,18 +1012,62 @@ function saveFile(filename, content, callback) {
     mkdirp(path.dirname(filename)), err => {
         if(err) {
             return callback(err);
-        } 
-        
+        }
+
         fs.writeFile(filename, body, callback);
     }
 }
 
 function download(url, filename, callback) {
     console.log(`Downloading ${url}`);
-    requst(url, (err, response, body) => {
+    request(url, (err, response, body) => {
         if(err) {
             return callback(err);
-        } 
+        }
+        saveFile(filename, body, err => {
+            if(err) {
+                return callback(err);
+            }
+            console.log(`Downloaded and saved: ${url}`);
+            callback(null, body)
+        });
+    });
+}
+```
+
+```nodejs
+// 4th refactoring
+function spider(url, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.exists(filename, exists => {
+        if(exists) {
+            return callback(null, filename, false);
+        }
+        return download(url, filename, err => {
+            if(err) {
+                return callback(err);
+            }
+            callback(null, filename, true);
+        });
+    });
+}
+
+function saveFile(filename, content, callback) {
+    mkdirp(path.dirname(filename)), err => {
+        if(err) {
+            return callback(err);
+        }
+
+        fs.writeFile(filename, body, callback);
+    }
+}
+
+function download(url, filename, callback) {
+    console.log(`Downloading ${url}`);
+    request(url, (err, response, body) => {
+        if(err) {
+            return callback(err);
+        }
         saveFile(filename, body, err => {
             if(err) {
                 return callback(err);
