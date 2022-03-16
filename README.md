@@ -1078,3 +1078,30 @@ function download(url, filename, callback) {
     });
 }
 ```
+
+### 3. sequential execution
+
+```nodejs
+function task1(callback) {
+    asyncOperation(() => {
+        task2(callback);
+    }
+}
+
+function task2(callback) {
+    asyncOperation(() => {
+        task3(callback);
+    }
+}
+
+function task3(callback) {
+    asyncOperation(() => {
+        callback();
+    }
+}
+
+task1(() => {
+    console.log(`task 1, 2 and 3 excuted`);
+})
+```
+
