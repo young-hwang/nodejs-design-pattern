@@ -1105,3 +1105,43 @@ task1(() => {
 })
 ```
 
+```nodejs
+// 1st
+function spider(url, nesting, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.readFile(filename, 'utf8', (err, body) => {
+        if(err) {
+            if(err.code != 'ENOENT') {
+                return callback(err);
+            }
+            return download(url, filename, (err, body) => {
+                if(err) {
+                    return callback(err);
+                }
+                spiderLinks(url, body, nesting, callback);
+            });
+        }
+        spiderLinks(url, body, nesting, callback);
+    });
+}
+
+function spiderLinks(currentUrl, body, nesting, callback) {
+    if(nesting) {
+        return process.nextTick(callback);
+    }
+    const links = utilities.getPageLinks(currentUrl, body);
+    function iterate(index) {
+        if(index === links.length) {
+            return callback();
+        }
+
+        spider(links[index], nesting - 1, err => {
+            if(err) {
+                return callback(err);
+            }
+            iterate(index + 1);
+        });
+    }
+    iterate(0);
+}
+```
