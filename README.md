@@ -1145,3 +1145,142 @@ function spiderLinks(currentUrl, body, nesting, callback) {
     iterate(0);
 }
 ```
+
+```nodejs
+// pattern
+function iterate(index) {
+    if(index === links.length) {
+        return finish();
+    }
+    const task = tasks[index];
+    task(function() {
+        iterate(index + 1);
+    });
+}
+function finish() {
+}
+iterate(0);
+
+function iterateSeries(collection, iteratorCallback, finalCallback) {
+    function iterate(index) {
+        if(index === links.length) {
+            return finalCallback();
+        }
+        const task = collection[index];
+        task(function() => {
+            iteratorCallback();
+        });
+    }
+    iterate(0);
+}
+```
+
+### 4. parallel execution
+
+```nodejs
+// 2
+function spider(url, nesting, callback) {
+    const filename = utilities.UrlToFilename(url);
+    fs.readFile(filename, 'utf8', (err, body) => {
+        if(err) {
+            if(err.code != 'ENOENT') {
+                return callback(err);
+            }
+            return download(url, filename, (err, body) => {
+                if(err) {
+                    return callback(err);
+                }
+                spiderLinks(url, body, nesting, callback);
+            });
+        }
+        spiderLinks(url, body, nesting, callback);
+    });
+}
+
+function spiderLinks(currentUrl, body, nesting, callback) {
+    if(nesting === 0) {
+        return process.nextTick(callback);
+    }
+    const links = utilities.getPageLinks(currentUrl, body);
+    if(links.length === 0) {
+        return process.nextTick(callback);
+    }
+
+    let completed = 0, hasErrors = false;
+
+    function done(err) {
+        if(err) {
+            hasErros = true;
+            return callback(err);
+        }
+        if(++completed === links.length && !hasErrors) {
+            return callback();
+        }
+    }
+
+    links.forEach(link => {
+        spider(link, nesting - 1, done)
+    });
+}
+```
+
+```nodejs
+// 3
+const spidering = new Map();
+function spider(url, nesting, callback) {
+    if(spidering.has(url)) {
+        return process.nextTick(callback);
+    }
+    spidering.set(url, true);
+    const filename = utilities.UrlToFilename(url);
+    fs.readFile(filename, 'utf8', (err, body) => {
+        if(err) {
+            if(err.code != 'ENOENT') {
+                return callback(err);
+            }
+            return download(url, filename, (err, body) => {
+                if(err) {
+                    return callback(err);
+                }
+                spiderLinks(url, body, nesting, callback);
+            });
+        }
+        spiderLinks(url, body, nesting, callback);
+    });
+}
+
+function spiderLinks(currentUrl, body, nesting, callback) {
+    if(nesting === 0) {
+        return process.nextTick(callback);
+    }
+    const links = utilities.getPageLinks(currentUrl, body);
+    if(links.length === 0) {
+        return process.nextTick(callback);
+    }
+
+    let completed = 0, hasErrors = false;
+
+    function done(err) {
+        if(err) {
+            hasErros = true;
+            return callback(err);
+        }
+        if(++completed === links.length && !hasErrors) {
+            return callback();
+        }
+    }
+
+    links.forEach(link => {
+        spider(link, nesting - 1, done)
+    });
+}
+```
+
+### 5. limited parallel execution
+
+```nodejs
+const tasks = ...
+function next() {
+
+}
+```
