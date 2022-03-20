@@ -1,8 +1,10 @@
-# 1. Node.js
+# Node.js Design Patterns
 
-## 2. Node.js 6 and ES2015
+## 1. Node.js
 
-### 1. let and const
+### 2. Node.js 6 and ES2015
+
+#### 1. let and const
 
 ```nodejs
 if (false) {
@@ -41,7 +43,7 @@ const path = require('path'); // const use at using module.
 let path = './some/path'; // Error
 ```
 
-### 2. Arrow Function
+#### 2. Arrow Function
 
 ```nodejs
 // Old Function
@@ -75,7 +77,7 @@ DelayedGreeter.prototype.greet = function() {
   }, 500)
 }
 
-const greeter = new DelaydGreeter('World');
+const greeter = new DelayedGreeter('World');
 greeter.greet();  // undefined
 ```
 
@@ -91,7 +93,7 @@ DelayedGreeter.prototype.greet = function() {
   }).bind(this), 500)
 }
 
-const greeter = new DelaydGreeter('World');
+const greeter = new DelayGreeter('World');
 greeter.greet(); // Hello World
 ```
 
@@ -105,11 +107,11 @@ DelayedGreeter.prototype.greet = function() {
   setTimeout(() => console.log('Hello' + this.name), 500);
 }
 
-const greeter = new DelaydGreeter('World');
+const greeter = new DelayGreeter('World');
 greeter.greet(); // Hello World
 ```
 
-### 3. Class
+#### 3. Class
 
 ```nodejs
 function Person(name, surname, age) {
@@ -160,7 +162,7 @@ class PersonWithMiddlename extends Person {
 }
 ```
 
-### 4. Object literal
+#### 4. Object literal
 
 ```nodejs
 const x = 22;
@@ -187,26 +189,26 @@ const style = {
 
 ```nodejs
 const person = {
-  name: 'eorge',
+  name: 'George',
   surname: 'Boole',
 
-  get fullname() {
+  get fullName() {
     return this.name + ' ' + this.surname;
   }
 
-  set fullname(fullanme) {
-    let parts = fullname.slit(' ');
+  set fullName(fullName) {
+    let parts = fullName.slit(' ');
     this.name = parts[0];
     this.surname = parts[1];
   }
 }
 
-console.log(person.fullname); // Geroge Boole
-console.log(person.fullname = 'Alan Turing') // Alan Turing
+console.log(person.fullName); // George Boole
+console.log(person.fullName = 'Alan Turing') // Alan Turing
 console.log(person.name) // Alan
 ```
 
-### 5. Map and Set Collection
+#### 5. Map and Set Collection
 
 ```nodejs
 const profiles = new Map();
@@ -249,7 +251,7 @@ for (const entry of s) {
 }
 ```
 
-### 6. WeakMap and WeakSet
+#### 6. WeakMap and WeakSet
 
 ```nodejs
 let obj = {}; // key is object type
@@ -268,22 +270,22 @@ obj1 = undefined;
 console.log(set.has(obj1)); // false
 ```
 
-### 7. Template
+#### 7. Template
 
 ```nodejs
 const name = "Leonardo";
 const interest = ["arts", "architecture", "science", "music", "mathematics"];
-const birth = { year: 1452, place: 'Flornce' };
-cost text = `${name} was an Italian ploymath
+const birth = { year: 1452, place: 'Florence' };
+cost text = `${name} was an Italian polymath
     interested in many topics such as
     ${interest.join(', ')}. He was born
     in ${birth.year} in ${birth.place}`
 console.log(text);
 ```
 
-## 3. Reactor Patterns
+### 3. Reactor Patterns
 
-### 3. Non Blocking IO
+#### 3. Non Blocking IO
 
 ```nodejs
 resources = [socketA, socketB, socketC];
@@ -302,7 +304,7 @@ while (!resources.empty()) {
 }
 ```
 
-### 4. Event Demultiplexing
+#### 4. Event Demultiplexing
 
 운영체제이서 제공하는 Non Blocking Resource 처리를 위한 기능
 ***동기 이벤트 디멀티플렉서 or 이벤트 통지 인터페이스***
@@ -324,11 +326,11 @@ while (events = demuliplexer.watch(watchedList)) {
 }
 ```
 
-# 2. Node.js Patterns
+## 2. Node.js Patterns
 
-## 1. Callback Patterns
+### 1. Callback Patterns
 
-### 1. The Continuation-Passing Style
+#### 1. The Continuation-Passing Style
 
 ```nodejs
 // direct style
@@ -352,7 +354,7 @@ after
 ```
 
 ```nodejs
-// ayncronous continuation-passing style
+// async continuation-passing style
 function add(a, b, callback) {
     setTimeout(() => callback(a + b), 100); // setTimeout is asynchronous
 }
@@ -372,7 +374,7 @@ const result = [1, 5, 7].map(element => element - 1);
 console.log('result');
 ```
 
-### 2. sync? async?
+#### 2. sync? async?
 
 ```nodejs
 const fs = require('fs');
@@ -398,7 +400,7 @@ function createFileReader(filename) {
         onDataReady: listener => listeners.push(listener);
     };
 }
-const rader1 = createFileReader('data.txt');
+const reader1 = createFileReader('data.txt');
 reader1.onDataReady(data => {
     console.log('First call data: ' + data);
 
@@ -412,12 +414,12 @@ First call data: some data
 ```
 
 ```nodejs
-// deffered execution
+// deffer execution
 const fs = require('fs');
 const cache = {};
 function consistentReadAsync(filename, callback) {
     if (cache[filename]) {
-        process.nextTick(() => callback(cache[filename])); // deffered execution
+        process.nextTick(() => callback(cache[filename])); // deffer execution
     } else {
         // asynchronous function
         fs.readFile(filename, 'utf8', (err, data) => {
@@ -428,7 +430,7 @@ function consistentReadAsync(filename, callback) {
 }
 ```
 
-### 3. node.js callback principle
+#### 3. node.js callback principle
 
 ```nodejs
 // callback is last parameter
@@ -462,7 +464,7 @@ function readJSON(filename, callback) {
 ```
 
 ```nodejs
-// not chatched exceptions
+// not catch exceptions
 const fs = require('fs');
 function readJSONThrows (filename, callback) {
     fs.readFile(filename, 'utf8', (err, data) => {
@@ -496,15 +498,15 @@ try {
 
 ```nodejs
 process.on('uncaughtException', (err) => {
-    console.error('This whill catch at last the + 'JSON parsing exception: ' + err.message);
+    console.error('This will catch at last the + 'JSON parsing exception: ' + err.message);
     // end code '1', application exit
     process.exit(1);
 });
 ```
 
-## 2 Module System and Patterns
+### 2 Module System and Patterns
 
-### 1. Revealing Module Pattern
+#### 1. Revealing Module Pattern
 
 ```nodejs
 const module = (() => {
@@ -519,7 +521,7 @@ const module = (() => {
 console.log(module);
 ```
 
-### 2. Node.js Module
+#### 2. Node.js Module
 
 ```nodejs
 function loadModule(filename, module, require) {
@@ -531,7 +533,7 @@ function loadModule(filename, module, require) {
 
 const require = (moduleName) => {
     console.log(`Require invoked for module: ${moduleName}`);
-    const id = require.resovle(moduleName);
+    const id = require.resolve(moduleName);
     if(require.cache[id]) {
         return require.cache[id].exports;
     }
@@ -565,6 +567,7 @@ module.exports.run = () => {
     log();
 }
 ```
+
 ```nodejs
 // require is synchronous
 setTimeout(() => {
@@ -601,7 +604,7 @@ console.log(b);
 { bWasLoaded: false, loaded: true }
 ```
 
-### 3. Module Definition Pattern
+#### 3. Module Definition Pattern
 
 ```nodejs
 // named exports
@@ -622,7 +625,7 @@ logger.log('This is a verbose message')
 ```
 
 ```nodejs
-// Exporting a function(= substack)
+// Exporting a function(= sub stack)
 
 // logger.js
 module.exports = (message) => {
@@ -697,7 +700,7 @@ exports.module = Logger;
 // guard (constructor function or class)(like factory)
 
 function Logger(name) {
-    if(!(this instanceof Logger)) {
+    if(!(this instanceOf Logger)) {
         return new Logger(name);
     }
     this.name = name;
@@ -756,16 +759,16 @@ const logger = require('./logger');
 logger.customMessage();
 ```
 
-## The Observer Pattern
+### 3. The Observer Pattern
 
-### 1 EventEmitter Class
+#### 1. EventEmitter Class
 
 ```nodejs
 const EventEmitter = require('event').EventEmitter;
 const eeInstance = new EventEmitter();
 ```
 
-### 2. Use EventEmitter
+#### 2. Use EventEmitter
 
 ```nodejs
 const EventEmitter = require('event').EventEmitter;
@@ -777,7 +780,7 @@ function findPattern(files, regex) {
         fs.readFile(file, 'utf8', (err, content) => {
             if (err)
                 return emitter.emit('error', err); // must need. error emitter
-            emitter.emit('fileread', file);
+            emitter.emit('fileRead', file);
             let match;
             if (match = content.match(regex))
                 match.forEach(elem => emitter.emit('found', file, elem));
@@ -790,14 +793,14 @@ filePattern(
     ['fileA.txt', 'fileB.json'],
     /hello \w+/g
 )
-.on('fileread', file => console.log(file + ' was read'))
+.on('fileRead', file => console.log(file + ' was read'))
 .on('found', (file, match) => console.log('Matched "' + match + '" in file ' + file)
 .on('error', err => console.log('Error emitted: ' + err.message));
 ```
 
-### 3. error propagation
+#### 3. error propagation
 
-### 4. Create Observer Class
+#### 4. Create Observer Class
 
 ```nodejs
 const EventEmitter = require('events').EventEmitter;
@@ -820,7 +823,7 @@ class FindPattern extends EventEmitter {
             fs.readFile(file, 'utf8', (err, content) => {
                 if (err)
                     return this.emit('error', err);
-                this.emit('fileread', file);
+                this.emit('fileRead', file);
                 let match = null;
                 if (match = content.match(this.regex))
                     match.forEach(elem => this.emit('found', file, elem));
@@ -834,12 +837,12 @@ findPatternObj
 .addFile('fileA.txt')
 .addFile('fileB.json')
 .find()
-.on('filerad', file => console.log(`${file} was read`)
+.on('fileRead', file => console.log(`${file} was read`)
 .on('found', (file, match) => console.log(`Matched "${match}" in file ${file}))
 .on('error', err => console.log(`Error emitted ${err.message}));
 ```
 
-### 5. sync / async event
+#### 5. sync / async event
 
 ```nodejs
 const EventEmitter = require('event').EventEmitter;
@@ -852,10 +855,10 @@ class SyncEmit extends EventEmitter {
 }
 
 const syncEmit = new SyncEmit();
-syncemit().on('ready', () => console.log('Object is ready to be used'));
+syncEmit().on('ready', () => console.log('Object is ready to be used'));
 ```
 
-### 6. EventEmitter vs Callback
+#### 6. EventEmitter vs Callback
 
 ```nodejs
 // EventEmitter
@@ -871,67 +874,16 @@ function helloCallback(callback) {
 }
 ```
 
-# 3. Asynchronous control pattern using callback
+## 3. Asynchronous control pattern using callback
 
-## 1. Difficult of asynchronous programming
+### 1. Difficult of asynchronous programming
 
-### 1. Make a simple web project
+#### 1. Make a simple web project
 
-```nodejs
-// spider.js
-const request = require('request');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const path = require('path');
-const utilities = require('./utilities');
 
-function spider(url, callback) {
-    const filename = utilities.UrlToFilename(url);
-    fs.exists(filename, exists => {
-        if(!exists) {
-            console.log(`Downloading ${url}`);
-            requst(url, (err, response, body) => {
-                if(err) {
-                    callback(err);
-                } else {
-                    mkdirp(path.dirname(filename)), err => {
-                        if(err) {
-                            callback(err);
-                        } else {
-                            fs.writeFile(filename, body, err => {
-                                if(err) {
-                                    callback(err);
-                                } else {
-                                    callback(null, filename, true);
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-        } else {
-            callback(null, filename, false);
-        }
-    });
-}
+### 2. Use Normal Javascript
 
-spider(process.argv[2], (err, filename, downloaded) => {
-    if(err) {
-        console(err);
-    } else if(downloaded) {
-        console.log(`Completed the download of "${filename}"`);
-    } else {
-        console.log(`"${filename}" was already downloaded`);
-    }
-});
-
-// execute
-node spider http://www.example.com
-```
-
-## 2. Use Normal Javascript
-
-### 2. Use Callback Rule
+#### 2. Use Callback Rule
 
 ```nodejs
 // 1st refactoring
@@ -940,7 +892,7 @@ function spider(url, callback) {
     fs.exists(filename, exists => {
         if(!exists) {
             console.log(`Downloading ${url}`);
-            requst(url, (err, response, body) => {
+            request(url, (err, response, body) => {
                 if(err) {
                     return callback(err);
                 }
@@ -972,7 +924,7 @@ function spider(url, callback) {
     fs.exists(filename, exists => {
         if(!exists) {
             console.log(`Downloading ${url}`);
-            requst(url, (err, response, body) => {
+            request(url, (err, response, body) => {
                 if(err) {
                     return callback(err);
                 }
@@ -1079,7 +1031,7 @@ function download(url, filename, callback) {
 }
 ```
 
-### 3. sequential execution
+#### 3. sequential execution
 
 ```nodejs
 function task1(callback) {
@@ -1101,7 +1053,7 @@ function task3(callback) {
 }
 
 task1(() => {
-    console.log(`task 1, 2 and 3 excuted`);
+    console.log(`task 1, 2 and 3 executed`);
 })
 ```
 
@@ -1175,7 +1127,7 @@ function iterateSeries(collection, iteratorCallback, finalCallback) {
 }
 ```
 
-### 4. parallel execution
+#### 4. parallel execution
 
 ```nodejs
 // 2
@@ -1210,7 +1162,7 @@ function spiderLinks(currentUrl, body, nesting, callback) {
 
     function done(err) {
         if(err) {
-            hasErros = true;
+            hasErrors = true;
             return callback(err);
         }
         if(++completed === links.length && !hasErrors) {
@@ -1262,7 +1214,7 @@ function spiderLinks(currentUrl, body, nesting, callback) {
 
     function done(err) {
         if(err) {
-            hasErros = true;
+            hasErrors = true;
             return callback(err);
         }
         if(++completed === links.length && !hasErrors) {
@@ -1276,11 +1228,134 @@ function spiderLinks(currentUrl, body, nesting, callback) {
 }
 ```
 
-### 5. limited parallel execution
+#### 5. limited parallel execution
 
 ```nodejs
+// limited execution
 const tasks = ...
-function next() {
+const concurrency = 2;
+const running = 0;
+const completed = 0;
+const index = 0;
 
+function next() {
+    while(running < concurrency && index < tasks.length) {
+        task = tasks[index++];
+        task(() => {
+            if(completed === tasks.index) {
+                return flush();
+            }
+            completed++;
+            running--;
+            next();
+        });
+        running++;
+    }
 }
+
+next();
+
+function flush() {
+    // finished
+}
+```
+
+```nodejs
+// using queue
+class TaskQueue {
+    constructor(concurrency) {
+        this.concurrency = concurrency;
+        this.running = 0;
+        this.queue = [];
+    }
+
+    pushTask(task) {
+        this.queue.push(task);
+        this.next();
+    }
+
+    next() {
+        while(this.running < this.concurrency && this.queue.length) {
+            const task = this.queue.shift();
+            task(() => {
+                this.running--;
+                this.next();
+            });
+            this.running++;
+        }
+    }
+}
+```
+
+```nodejs
+const TaskQueue = require('./taskQueue');
+const downloadQueue = new TaskQueue(2);
+function spider(url, nesting, callback) {
+    if(spidering.has(url)) {
+        return process.nextTick(callback);
+    }
+    spidering.set(url, true);
+    const filename = utilities.UrlToFilename(url);
+    fs.readFile(filename, 'utf8', (err, body) => {
+        if(err) {
+            if(err.code != 'ENOENT') {
+                return callback(err);
+            }
+            return download(url, filename, (err, body) => {
+                if(err) {
+                    return callback(err);
+                }
+                spiderLinks(url, body, nesting, callback);
+            });
+        }
+        spiderLinks(url, body, nesting, callback);
+    });
+}
+
+function spiderLinks(currentUrl, body, nesting, callback) {
+    if(nesting === 0) {
+        return process.nextTick(callback);
+    }
+    const links = utilities.getPageLinks(currentUrl, body);
+    if(links.length === 0) {
+        return process.nextTick(callback);
+    }
+
+    let completed = 0, hasErrors = false;
+
+    links.forEach(link => {
+        downloadQueue.pushTask(done => {
+            spider(link, nesting - 1, err => {
+                if (err) {
+                    hasErrors = true;
+                    return callback(err);
+                }
+                if(++completed === links.length && !hasErrors) {
+                    callback();
+                }
+                done();
+            })
+        }
+    });
+
+    function done(err) {
+        if(err) {
+            hasErrors = true;
+            return callback(err);
+        }
+        if(++completed === links.length && !hasErrors) {
+            return callback();
+        }
+    }
+}
+```
+
+### 3. Async Library
+
+#### 1. Sequential Execution
+
+```nodejs
+const async = require('async');
+
+
 ```
