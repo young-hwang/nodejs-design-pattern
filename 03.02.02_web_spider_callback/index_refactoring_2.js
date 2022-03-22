@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-const request = require('request')
-=======
 'use strict';
 
 const axios = require('axios')
 // const request = require('request'); deprecated
->>>>>>> main
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')

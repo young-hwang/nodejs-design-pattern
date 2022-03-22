@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-const request = require('request')
-=======
 'use strict';
 
 const axios = require('axios')
 // const request = require('request'); deprecated
->>>>>>> main
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
@@ -20,7 +16,7 @@ function spider(url, callback) {
     console.log(`Downloading ${url}`)
     axios
       .get(url)
-      .then(res => {                        // 2
+      .then(res => {                                    // 2
         mkdirp(path.dirname(filename), (err) => {       // 3
           if (err) {
             return callback(err)

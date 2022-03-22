@@ -2,24 +2,15 @@
   "name": "crawler",
   "version": "1.0.0",
   "description": "",
-<<<<<<< HEAD
-  "main": "index_refactoring_0.js",
-=======
   "main": "index_refactoring_1.js",
->>>>>>> main
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
-    "mkdirp": "^0.5.1",
-    "request": "^2.67.0",
-=======
     "axios": "^0.26.1",
     "mkdirp": "^0.5.1",
->>>>>>> main
     "slug": "^0.9.1"
   }
 }
