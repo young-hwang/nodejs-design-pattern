@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-const request = require('request')
-=======
 'use strict';
 
 const axios = require('axios')
 // const request = require('request'); deprecated
->>>>>>> main
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const path = require('path')
@@ -16,29 +12,46 @@ function saveFile(filename, content, callback) {
     if (err) {
       return callback(err)
     }
-    fs.writeFile(filename, content, callback)   // 4
+    fs.writeFile(filename, content, callback);   // 4
   })
+}
+
+function download(url, filename, callback) {
+  console.log(`Downloading ${url}`)
+  axios
+    .get(url)
+    .then(res => {                                    // 2
+      const content = res.data;
+      saveFile(filename, content, (err) => {
+        if (err) {
+          callback(err)
+        }
+        callback(null, content)
+      })
+    })
+    .catch(err => {
+      callback(err)
+    })
 }
 
 function spider(url, callback) {
   const filename = utilities.urlToFilename(url)
-  fs.exists(filename, (exists) => {
+  fs.exists(filename, (exists) => {                     // 1
     if (exists) {
-      return callback(null, filename, false)
+      callback(null, filename, false)
     }
-    console.log(`Downloading ${url}`)
-    request(url, (err, response, body) => {
+    download(url, filename, (err) => {
       if (err) {
-        return callback(err)
+         callback(err)
       }
-      saveFile(filename, body, callback)
+      callback(null, filename, true)
     })
   })
 }
 
 spider(process.argv[2], (err, filename, downloaded) => {
   if (err) {
-    console(err)
+    console.log(err)
   } else if (downloaded) {
     console.log(`Completed the download of "${filename}"`)
   } else {
