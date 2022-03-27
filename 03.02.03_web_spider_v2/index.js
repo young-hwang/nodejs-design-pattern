@@ -25,6 +25,7 @@ const download = (url, filename, callback) => {
         if (err) {
           callback(err)
         }
+        console.log(`Downloaded and saved: ${url}`);
         callback(null, content)
       })
     })
@@ -76,9 +77,8 @@ function spider(url, nesting, callback) {
 spider(process.argv[2], 1, (err, filename, downloaded) => {
   if (err) {
     console.log(err)
+    process.exit()
   } else if (downloaded) {
-    console.log(`Completed the download of "${filename}"`)
-  } else {
-    console.log(`"${filename}" was already downloaded`)
+    console.log(`Download complete`)
   }
 })
