@@ -18,16 +18,15 @@ const download = (url, filename, callback) => {
           .get(url)
           .then(res => {                                    // 2
             body = res.data;
-            mkdirp(path.dirname(filename), (err) => {       // 3
-              if (err) {
-                return callback(err)
-              }
-              fs.writeFile(filename, body, callback);   // 4
-            })
+            callback();
           })
           .catch(err => {
             callback(err)
           })
+      },
+      mkdirp.bind(null, path.dirname(filename)),
+      callback => {
+        fs.writeFile(filename, body, callback);
       }
     ],
     err => {
