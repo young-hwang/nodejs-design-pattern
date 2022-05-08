@@ -865,7 +865,7 @@ syncEmit().on('ready', () => console.log('Object is ready to be used'));
 function helloEvents() {
     const eventEmitter = new EventEmitter();
     setTimeout(() => event.emit('hello', 'hello world'), 100)
-    return EventEmitter;
+    return eventEmitter;
 }
 
 // Callback
