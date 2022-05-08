@@ -10,7 +10,7 @@
 if (false) {
   var x = "hello";
 } 
-console.log(x); // undefined - function scope, global scope
+console.log(x); // undefined - function scope, global scope 
 ```
 
 ```nodejs
