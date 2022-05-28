@@ -1,6 +1,5 @@
 function* iteratorGenerator(arr) {
   for (let i = 0; i < arr.length; i++) {
-    console.log('index ' + i);
     yield arr[i];
   }
 }

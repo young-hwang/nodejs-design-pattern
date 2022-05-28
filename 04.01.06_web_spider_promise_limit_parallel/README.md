@@ -5,4 +5,4 @@ To run this example you need to:
      npm install
 
 2. download a website of your choice with
-     node index.js <url of the website to download> <
+     node clone.js <url of the website to download> <
