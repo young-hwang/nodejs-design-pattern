@@ -28,9 +28,8 @@ function* spiderLinks(currentUrl, body, nesting) {
     return nextTick();
   }
   const links = utilities.getPageLinks(currentUrl, body);
-  for (let i = 0; i < links.length; i++) {
-    yield spider(links[i], nesting - 1);
-  }
+  const tasks = links.map(link => spider(link, nesting - 1));
+  yield tasks;
 }
 
 function* spider(url, nesting) {
