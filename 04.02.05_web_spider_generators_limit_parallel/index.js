@@ -2,16 +2,17 @@
 
 const thunkify = require('thunkify');
 const co = require('co');
-
 const urllib = require('urllib');
 const fs = require("fs");
 const path = require("path");
 
+const TaskQueue = require('./taskQueue');
 const mkdirp = thunkify(require('mkdirp'));
 const readFile = thunkify(fs.readFile);
 const writeFile = thunkify(fs.writeFile);
 const nextTick = thunkify(process.nextTick);
 const utilities = require("./utilities");
+const downloadQueue = new TaskQueue(2);
 
 function* download(url, filename) {
   console.log(`Downloading ${url}`)
@@ -31,7 +32,7 @@ function spiderLinks(currentUrl, body, nesting) {
     let completed = 0, hasErrors = false;
     const links = utilities.getPageLinks(currentUrl, body);
     if (links.length === 0) {
-      process.nextTick(callback);
+      return process.nextTick(callback);
     }
 
     function done(err, result) {
@@ -44,19 +45,28 @@ function spiderLinks(currentUrl, body, nesting) {
       }
     }
 
-    for (let i = 0; i < links.length; i++) {
-      co(spider(links[i], nesting - 1)).then(done);
-    }
+    links.forEach(link => {
+      downloadQueue.pushTask(function* (){
+        yield spider(link, nesting - 1);
+        done();
+      });
+    })
   }
 }
 
+let spidering = new Map();
 function* spider(url, nesting) {
-  const filename = utilities.urlToFilename(url)
-  let body
+  if(spidering.has(url)) {
+    return nextTick();
+  }
+  spidering.set(url, true);
+
+  let filename = utilities.urlToFilename(url);
+  let body;
   try {
     body = yield readFile(filename, 'utf8');
-  } catch (err) {
-    if (err.code !== 'ENOENT') {
+  } catch(err) {
+    if(err.code !== 'ENOENT') {
       throw err;
     }
     body = yield download(url, filename);
