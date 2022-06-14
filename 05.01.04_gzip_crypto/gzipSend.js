@@ -24,7 +24,7 @@ const req = http.request(options, res => {
 
 fs.createReadStream(file)
   .pipe(zlib.createGzip())
-  .pipe(crypto.createCipheriv('aes-192-cc', 'Uint8Array', '12345'))
+  .pipe(crypto.createCipheriv('aes-256-cbc', '12345678123456781234567812345678', '1111111111111111'))
   .pipe(req)
   .on('finish', () => {
     console.log('File successfully sent');

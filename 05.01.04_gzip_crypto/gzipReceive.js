@@ -7,9 +7,9 @@ const server = http.createServer((req, res) => {
   const filename = req.headers.filename;
   console.log(`File request received: ${filename}`);
   req
-    .pipe(crypto.createDecipheriv('aes192', 'a_shared_secret', ''))
+    .pipe(crypto.createDecipheriv('aes-256-cbc', '12345678123456781234567812345678', '1111111111111111'))
     .pipe(zlib.createGunzip())
-    .pipe(fs.createWriteStream(filename))
+    .pipe(fs.createWriteStream(filename + '_copy'))
     .on('finish', () => {
       res.writeHead(201, {'Content-Type': 'text/plain'});
       res.end(`That's it\n`);
