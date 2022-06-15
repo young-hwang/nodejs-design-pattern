@@ -1384,3 +1384,36 @@ Node.js와 같은 이벤트 기반 플랫폼에서 효율적인 I/O 처리는 �
 시간 효율성: 전체 데이터를 송수신하지 않고 데이터 덩어리를 생성 송수신하여 병렬로 처리
 결합성: 스트림이 균일한 인터페이스를 가지며 API 측명에서 서로 이해, 
 pipe 라인의 다음 스트림이 이전 스트림에 의해 생성되어 전달된 데이터 타입을 지원 해야함
+
+## 5.2 스트림 시작
+Stream이 Node.js의 핵심 모듈을 비롯한 모든 곳에서 사용
+
+### 5.2.1 스트림의 구조
+Node.js에서 모든 스트림은 네 가지 추상 클래스 중 하나의 구현체
+- stream.Readable
+- stream.Writable
+- stream.Duplex
+- stream.Transform
+
+각 stream class는 EventEmitter의 인스턴스
+binary data를 처리, 거의 모든 javascript 값을 처리
+
+실제로는 두 가지 동작 모드 지원 - I/O 뿐만 아니라 처리 단위를 기능 단위로 우아하게 구성 가능
+- binary mode: 데이터가 버퍼 또는 문자열과 같은 덩어리(chunk) 형태로 스트리밍되는 모드
+- object mode: 스트리밍 데이터가 일련의 별도 객체들로 취급(거의 모든 Javascript 값을 사용 가능)
+
+### 5.2.2 Readable Stream
+Readable Stream은 데이터 소스를 나타냄
+Stream 모듈의 Readbleabstract 클래스를 사용하여 구현
+
+데이터를 수신하는 방법
+- non-flowing: 
+  - Readable 스트림에서 읽기의 기본 패턴은 새로운 데이터를 읽을 준비가 되었다는 신호인 readable 이벤트에 대한 listener 등록
+  - 내부의 버퍼가 비워질 때까지 모든 데이터 읽음(내부 버퍼에서 동기식으로 데이터 덩어리(chunk)를 읽고 Buffer 또는 String 객체를 반환하는 read() 메소드 사용)
+  - read() 메소드 특징
+    - readable.read([size]) 를 사용하여 필요할 때 즉시 스트림으로부터 명시적으로 데이터를 가져옴
+    - 리스너는 새로운 데이터가 읽기 가능하게 되는 즉시 호출
+    - read() 메소드는 더이상 사용할 수 있는 데이터가 없을 시 null 반환, 이 경우 다시 읽을 수 있다는 이벤트 또는 end 이벤트까지 대기
+    - 특정 형식의 네트워크 프로토콜이나 특정 데이터 형식으로 분석하는 구현에 유용
+- flowing:
+
