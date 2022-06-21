@@ -1,4 +1,4 @@
-'use restrict';
+'use strict';
 
 process.stdin
   .on('data', (chunk) => {
