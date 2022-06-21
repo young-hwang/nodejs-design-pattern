@@ -1,0 +1,8 @@
+{
+  "name": "05.02.02_streams_readable",
+  "version": "1.0.0",
+  "main": "randomStream.js",
+  "dependencies": {
+    "chance": "^1.1.8"
+  }
+}
