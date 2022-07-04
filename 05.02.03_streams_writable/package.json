@@ -1,0 +1,8 @@
+{
+  "name": "05.02.03_streams_writable",
+  "version": "1.0.0",
+  "main": "entropyServer.js",
+  "dependencies": {
+    "chance": "^1.1.8"
+  }
+}
