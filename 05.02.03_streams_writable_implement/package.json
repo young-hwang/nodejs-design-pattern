@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "toFileStream.js",
   "dependencies": {
-    "chance": "^1.1.8"
+    "chance": "^1.1.8",
+    "mkdirp": "^1.0.4"
   }
 }

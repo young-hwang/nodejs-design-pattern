@@ -1,21 +1,24 @@
 'use strict';
 
-import stream from "stream";
-
+const stream = require('stream');
 const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
 
-class ToFileStream implements stream.Writable {
+class ToFileStream extends stream.Writable {
 
   constructor() {
-    super({ objectMode: true });
+    super({objectMode: true});
   }
 
   _write(chunk, encoding, callback) {
-    mkdirp(path.dirname(chunk.path), err => {
-
-    });
+    mkdirp(path.dirname(chunk.path))
+      .then(made => {
+        fs.writeFile(chunk.path, chunk.content, callback);
+      })
+      .catch(err => {
+        return err;
+      });
   }
 
 }
