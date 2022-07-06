@@ -1,0 +1,8 @@
+{
+  "name": "05.02.03_streams_writable_implementation",
+  "version": "1.0.0",
+  "main": "toFileStream.js",
+  "dependencies": {
+    "chance": "^1.1.8"
+  }
+}

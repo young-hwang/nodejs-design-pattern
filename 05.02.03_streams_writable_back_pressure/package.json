@@ -1,5 +1,5 @@
 {
-  "name": "05.02.03_streams_writable",
+  "name": "05.02.03_streams_writable_back_pressure",
   "version": "1.0.0",
   "main": "entropyServer.js",
   "dependencies": {
