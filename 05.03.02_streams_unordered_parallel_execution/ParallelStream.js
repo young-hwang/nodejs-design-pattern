@@ -1,5 +1,7 @@
 'use strict';
+
 const stream = require('stream');
+
 class ParallelStream extends stream.Transform {
   constructor(userTransform) {
     super({ objectMode: true });
@@ -34,4 +36,4 @@ class ParallelStream extends stream.Transform {
   }
 }
 
-module.exports = ParallelStream;
+module.exports = LimittedParallelStream;

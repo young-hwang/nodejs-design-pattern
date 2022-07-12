@@ -1,10 +1,8 @@
 'use strict';
-
 const fs = require('fs');
 const split = require('split');
 const axios = require('axios');
-const ParallelStream = require('./LimittedParallelStream');
-
+const ParallelStream = require('./parallelStream');
 fs.createReadStream(process.argv[2])
   .pipe(new ParallelStream((url, enc, push, done) => {
     if (!url) return done();

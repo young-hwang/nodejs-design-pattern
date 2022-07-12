@@ -1,0 +1,11 @@
+{
+  "name": "05.03.01_streams_sequential_execution",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "from2-array": "0.0.4",
+    "split": "^1.0.1",
+    "through2": "^4.0.2",
+    "through2-parallel": "^0.1.3"
+  }
+}

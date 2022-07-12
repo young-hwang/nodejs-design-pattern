@@ -1,4 +1,4 @@
-This example illustrates how to build a unordered parallel execution flow with limited concurrency using streams.
+This example illustrates how to build an ordered parallel execution flow using streams.
 To run this example you need to install the dependencies with:
 
 npm install
