@@ -3,10 +3,10 @@
 const fs = require('fs');
 const split = require('split');
 const axios = require('axios');
-const ParallelStream = require('./LimittedParallelStream');
+const ParallelStream = require('./ParallelStream');
 
 fs.createReadStream(process.argv[2])
-  .pipe(new ParallelStream((url, enc, push, done) => {
+  .pipe(new ParallelStream((url, enc, done, push) => {
     if (!url) return done();
     axios
       .get(url)
