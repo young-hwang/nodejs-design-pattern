@@ -6,17 +6,18 @@ const axios = require('axios');
 const ParallelStream = require('./ParallelStream');
 
 fs.createReadStream(process.argv[2])
+  .pipe(split())
   .pipe(new ParallelStream((url, enc, done, push) => {
     if (!url) return done();
     axios
       .get(url)
       .then(res => {
         push(url + ' is up\n');
-        callback();
+        done();
       })
       .catch(err => {
         push(url + ' is down\n');
-        callback(err)
+        done();
       })
   }))
   .pipe(fs.createWriteStream('result.txt'))
