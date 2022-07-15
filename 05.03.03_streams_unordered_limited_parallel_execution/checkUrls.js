@@ -7,11 +7,11 @@ const ParallelStream = require('./LimitedParallelStream');
 
 fs.createReadStream(process.argv[2])
   .pipe(split())
-  .pipe(new ParallelStream(2, (url, enc, push, done) => {
+  .pipe(new ParallelStream(2, (url, enc, done, push) => {
     if (!url) return done();
     axios
       .get(url)
-      .then(res => {
+      .then(() => {
         push(url + ' is up\n');
         done();
       })
