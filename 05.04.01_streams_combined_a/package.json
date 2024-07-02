@@ -1,0 +1,7 @@
+{
+  "name": "05.04.01_streams_combined_a",
+  "version": "1.0.0",
+  "dependencies": {
+    "multipipe": "^4.0.0"
+  }
+}
